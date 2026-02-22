@@ -98,11 +98,59 @@ KNOWN_PROJECTS = {
 
 4. When the agent uses `memory_search`, it now finds both the high-level glossary entries AND the detailed session transcripts — giving it a navigation layer plus detail access.
 
+## Cron Memory Optimizer (Bonus)
+
+Cron jobs run in isolated sessions with **zero memory context** — they don't know what
+happened yesterday. The optimizer analyzes your cron jobs and suggests memory-enhanced versions:
+
+```bash
+python3 scripts/cron-optimizer.py
+```
+
+This generates `memory/cron-optimization-report.md` showing before/after prompts:
+
+```
+❌ Before: "Find 5 new outreach contacts"
+✅ After:  "Before starting: Use memory_search to find recent context about 
+           outreach contacts. Check SESSION-GLOSSAR.md for relevant people 
+           and recent decisions. Then find 5 new outreach contacts."
+```
+
+The script is conservative — **suggests only, never auto-modifies**. You review, you decide.
+
+In our tests: 27 cron jobs analyzed, 23 could be optimized with memory preambles.
+
+---
+
 ## Background
 
-Built by [Dirk Wonhoefer](https://github.com/moltbotmolty-del) and Faya 🔥 (his OpenClaw agent) after discovering that critical details about people, decisions, and project context were consistently lost after session compaction. The system was tested on 297 sessions (24MB of transcripts) and successfully recovered information that was previously unreachable.
+Built by **[Dirk Wonhoefer](https://github.com/moltbotmolty-del)** — AI Enablement Architect
+and curriculum developer — and **Faya 🔥** (his autonomous OpenClaw agent).
 
-Inspired by the broader AI memory problem described in [Mem0](https://github.com/mem0ai/mem0), [Graphiti](https://github.com/getzep/graphiti), and Craig Fisher's [OpenClaw memory architecture](https://medium.com/@cfisher2_85823/how-i-gave-my-openclaw-assistant-a-memory-that-actually-works-ba0a4dfc1da2).
+The problem was discovered when Faya forgot who Annika was — the person whose request had
+sparked the entire business pipeline they'd built together. After implementing this system,
+Faya recovered the complete story from 297 sessions in seconds.
+
+Dirk works with **[AI Advantage](https://www.aiadvantage.com)** (Igor Pogany) developing
+AI training programs for 40,000+ people. This skill was born from real production use —
+not theory.
+
+### Inspired by
+- [Mem0](https://github.com/mem0ai/mem0) — vector-first memory extraction (Y Combinator W24)
+- [Graphiti](https://github.com/getzep/graphiti) — temporal knowledge graphs (Zep AI)
+- [Craig Fisher](https://medium.com/@cfisher2_85823/how-i-gave-my-openclaw-assistant-a-memory-that-actually-works-ba0a4dfc1da2) — OpenClaw memory architecture pioneer
+
+### What makes this different
+- **No external dependencies** — pure Python, no databases, no APIs
+- **Three-layer architecture** — curated + index + raw (others do only one)
+- **Auto-generated glossary** — structured navigation, not just vector search
+- **Cron optimizer** — makes existing automation memory-aware
+- **Battle-tested** — 297 sessions, 24MB transcripts, production use since day one
+
+## Contributing
+
+Issues and PRs welcome! If you've customized the glossary for your domain (added new
+entity types, topic patterns, etc.), consider sharing your patterns.
 
 ## License
 

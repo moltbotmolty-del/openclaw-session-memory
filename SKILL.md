@@ -124,6 +124,26 @@ memory/
     └── ...
 ```
 
+## Cron Memory Optimizer
+
+Cron jobs run in isolated sessions with zero memory context. The optimizer analyzes your cron jobs and suggests memory-enhanced versions:
+
+```bash
+python3 scripts/cron-optimizer.py
+```
+
+This scans `~/.openclaw/cron/jobs.json`, identifies jobs that would benefit from memory context, and generates `memory/cron-optimization-report.md` with before/after prompts and implementation guidance.
+
+**Example optimization:**
+```
+Original: "Run daily research scout..."
+Enhanced: "Before starting: Use memory_search to find recent context about research activities. Check memory/SESSION-GLOSSAR.md for relevant people, projects, and recent decisions. Then proceed with the original task using this context.
+
+Run daily research scout..."
+```
+
+The script is conservative (suggests only, never auto-modifies) and skips monitoring jobs that don't need context.
+
 ## Tips
 
 - Run the full rebuild (`python3 scripts/build-glossary.py` without `--incremental`)
@@ -133,3 +153,4 @@ memory/
 - For agents that run 24/7, the cron job keeps everything current automatically
 - Session transcripts can get large (our 297 sessions = 24MB) — this is fine,
   OpenClaw's vector search handles it efficiently
+- Use the cron optimizer after setting up memory to enhance existing automation
